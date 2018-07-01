@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- there is a place to set valic instagram client ID -->
-    <string name="insta_client_id">29138f70c21b4dc0a2e672ce534a0f97</string>
+    <string name="insta_client_id">__your_client_ID_here__</string>
 
 </resources>
