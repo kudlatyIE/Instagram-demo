@@ -20,11 +20,11 @@ public class UserSelfViewModel extends ViewModel{
 
     private MutableLiveData<UserSelf> mutableLiveDataUserSelf;
 
-    public LiveData<UserSelf> loadUserSelf(String acessToken){
+    public LiveData<UserSelf> loadUserSelf(String accessToken, boolean refreshData){
         if (null==mutableLiveDataUserSelf){
             mutableLiveDataUserSelf = new MutableLiveData<>();
-            getUserStats(acessToken);
-        }
+            getUserStats(accessToken);
+        }else if(refreshData) getUserStats(accessToken);
         return mutableLiveDataUserSelf;
     }
 

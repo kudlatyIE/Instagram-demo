@@ -10,10 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.jakewharton.picasso.OkHttp3Downloader;
+
 import com.squareup.picasso.Picasso;
 import ie.droidfactory.instagramdemo.model.MediaData;
-import okhttp3.OkHttpClient;
 
 public class MediaAdapter  extends RecyclerView.Adapter<MediaAdapter.MediaAdapterViewHolder>{
 
@@ -36,6 +35,7 @@ public class MediaAdapter  extends RecyclerView.Adapter<MediaAdapter.MediaAdapte
 //        this.mPicasso=picasso(context, okHttp3Downloader(okHttpClient.build()));
         this.mPicasso=picasso;
         this.imageSize=imageSize;
+        Log.d(TAG, "media img size: "+imageSize);
     }
 
 //    private OkHttpClient.Builder okHttpClient = new OkHttpClient.Builder();
@@ -74,7 +74,7 @@ public class MediaAdapter  extends RecyclerView.Adapter<MediaAdapter.MediaAdapte
                 .placeholder(R.drawable.ic_person_black_24dp)
                 .resize(imageSize, imageSize)
                 .into(holder.imgThumbnail);
-        holder.tvTitle.setText(mediaDataArray[position].getCaption().getText());
+        holder.tvLikes.setText(String.valueOf(mediaDataArray[position].getLikes().getCount()));
     }
 
     @Override
@@ -91,13 +91,13 @@ public class MediaAdapter  extends RecyclerView.Adapter<MediaAdapter.MediaAdapte
     class MediaAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         ImageView imgThumbnail;
-        TextView tvTitle;
+        TextView tvLikes;
 
         public MediaAdapterViewHolder(View itemView) {
             super(itemView);
 
-            imgThumbnail = itemView.findViewById(R.id.media_item_image);
-            tvTitle = itemView.findViewById(R.id.media_item_text_title);
+            imgThumbnail = itemView.findViewById(R.id.media_item_image_profile);
+            tvLikes = itemView.findViewById(R.id.media_item_text_likes_value);
             itemView.setOnClickListener(this);
         }
 

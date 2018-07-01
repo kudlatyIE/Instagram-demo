@@ -29,6 +29,11 @@
         <item name="android:textColor">@android:color/black</item>
     </style>
 
+    <style name="MediaTextLabel" parent="@style/TextAppearance.AppCompat.Subhead">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
     <style name="CustomButton" parent="Base.TextAppearance.AppCompat.Widget.Button.Borderless.Colored">
         <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
         <item name="android:textColor">@color/colorPrimaryDark</item>

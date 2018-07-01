@@ -18,13 +18,14 @@ public class MediaViewModel extends ViewModel {
 
     private MutableLiveData<MediaRecent> mutableLiveDataMediaRecent;
 
-    public LiveData<MediaRecent> loadMediaRecent(String accssToken){
+    public LiveData<MediaRecent> loadMediaRecent(String accssToken, boolean refreshData){
         if(null==mutableLiveDataMediaRecent){
             mutableLiveDataMediaRecent = new MutableLiveData<>();
             getMediaRecent(accssToken);
-        }
+        }else if(refreshData) getMediaRecent(accssToken);
         return mutableLiveDataMediaRecent;
     }
+
 
     private void getMediaRecent(String accessToken) {
         ServiceInstagram service  = ServiceFactory.createService(ServiceInstagram.class, ApiUtils.ENDPOINT_SELF);

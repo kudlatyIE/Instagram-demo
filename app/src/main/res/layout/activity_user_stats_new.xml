@@ -157,17 +157,26 @@
         app:layout_constraintTop_toBottomOf="@+id/profile_imageView"
         app:srcCompat="@color/colorGreyLight" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/user_media_recycleView"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/profile_swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="@dimen/short_margin"
         android:layout_marginEnd="@dimen/short_margin"
         android:layout_marginStart="@dimen/short_margin"
         android:layout_marginTop="@dimen/short_margin"
+        app:layout_constraintTop_toBottomOf="@+id/profile_divider_2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile_divider_2" />
+        >
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/user_media_recycleView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+             />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </android.support.constraint.ConstraintLayout>

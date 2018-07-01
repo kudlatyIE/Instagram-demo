@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -42,11 +43,13 @@ public class UserStatsActivity extends AppCompatActivity implements MediaAdapter
 
     private static final String TAG = UserStatsActivity.class.getSimpleName();
     public static final int TOKEN_REQUEST = 123;
+    private String mToken;
     private int spans = 2;
     private TextView tvName, tvPosts, tvFollows, tvFollowsBy;
     private ImageView imgProfile;
     private Button btnLogout;
     private RecyclerView mRecyclerView;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private MediaAdapter mediaAdapter;
     private Picasso picasso;
 
@@ -60,6 +63,7 @@ public class UserStatsActivity extends AppCompatActivity implements MediaAdapter
         tvFollowsBy = findViewById(R.id.profile_text_followBy_value);
         imgProfile = findViewById(R.id.profile_imageView);
         btnLogout = findViewById(R.id.profile_button_logout);
+        swipeRefreshLayout = findViewById(R.id.profile_swipe_refresh_layout);
         mRecyclerView = findViewById(R.id.user_media_recycleView);
         picasso = getPicasso();
         if(getResources().getConfiguration().orientation== Configuration.ORIENTATION_LANDSCAPE) spans = 3;
@@ -69,13 +73,15 @@ public class UserStatsActivity extends AppCompatActivity implements MediaAdapter
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mediaAdapter);
 
+        swipeRefreshLayout.setRefreshing(false);
         Bundle bundle = getIntent().getExtras();
         if(bundle!=null){
-            getUserStats(bundle.getString("token"));
+            mToken= bundle.getString("token");
+            getUserStats(mToken, false);
         }else {
             Log.d(TAG, "missing token");
-            String token = MySharedPref.getAccessToken(this);
-            if(token!=null) getUserStats(token);
+            mToken = MySharedPref.getAccessToken(this);
+            if(mToken!=null) getUserStats(mToken, false);
         }
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,17 +93,26 @@ public class UserStatsActivity extends AppCompatActivity implements MediaAdapter
                 finish();
             }
         });
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipeRefreshLayout.setRefreshing(true);
+                if(mToken!=null) getUserStats(mToken, true);
+            }
+        });
     }
 
-    private void getUserStats(final String token){
+    private void getUserStats(final String token, final boolean refresh){
+        Log.d(TAG, "RUN AGAIN!!!!!!");
         UserSelfViewModel authViewModel = ViewModelProviders.of(this).get(UserSelfViewModel.class);
-        authViewModel.loadUserSelf(token).observe(this, new Observer<UserSelf>() {
+        authViewModel.loadUserSelf(token, refresh).observe(this, new Observer<UserSelf>() {
             @Override
             public void onChanged(@Nullable UserSelf userSelf) {
+                Log.d(TAG, "getUserStats onChanged................)");
                 if(userSelf!=null){
                     if(userSelf.getMeta().getCode()==200){
                         setUserSelfView(userSelf, picasso);
-                        getMediaData(token);
+                        getMediaData(token, refresh);
                     }else {
                         //TODO: handle this
                         Log.d(TAG, userSelf.getMeta().getError_message());
@@ -107,10 +122,9 @@ public class UserStatsActivity extends AppCompatActivity implements MediaAdapter
         });
     }
 
-    private void getMediaData(String token){
-
+    private void getMediaData(String token, boolean refresh){
         MediaViewModel mediaViewModel = ViewModelProviders.of(this).get(MediaViewModel.class);
-        mediaViewModel.loadMediaRecent(token).observe(this, new Observer<MediaRecent>() {
+        mediaViewModel.loadMediaRecent(token, refresh).observe(this, new Observer<MediaRecent>() {
             @Override
             public void onChanged(@Nullable MediaRecent mediaRecent) {
                 if(mediaRecent!=null){
@@ -126,11 +140,12 @@ public class UserStatsActivity extends AppCompatActivity implements MediaAdapter
                 }
             }
         });
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
     public void onClick(MediaData mediaData) {
-        Toast.makeText(this, "likes number: "+mediaData.getLikes().getCount(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "img title:\n"+mediaData.getCaption().getText(), Toast.LENGTH_SHORT).show();
     }
 
     private void setUserSelfView(UserSelf userData, Picasso picasso){
