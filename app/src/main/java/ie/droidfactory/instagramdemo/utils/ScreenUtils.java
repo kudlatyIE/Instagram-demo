@@ -6,8 +6,9 @@ import android.content.res.Configuration;
 public class ScreenUtils {
 
     /**
-     * calculate opmized width of profile picture as 20% of screen width
+     * calculate optimized width of profile picture as 20% of screen width
      * to keep small size of profile pic (span==1) keep small side of screen as width
+     * For media images return size too fit span width
      * @param context current Context
      * @param ratio part of sigle span for image
      * @param spans span number for images

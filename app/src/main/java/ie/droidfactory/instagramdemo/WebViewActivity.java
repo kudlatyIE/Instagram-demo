@@ -14,14 +14,13 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 /**
- *
+ * Instagram implicit flow
+ * Receiving an access_token http://your-redirect-uri#access_token=ACCESS-TOKEN
  */
 public class WebViewActivity extends AppCompatActivity {
 
     private final static String TAG = WebViewActivity.class.getSimpleName();
-
     private String accessToken;
-    private String requestUrl;
     private WebView webView;
 
     @Override
@@ -30,8 +29,7 @@ public class WebViewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_web_view);
         webView = findViewById(R.id.instagram_webview);
         if(getIntent().getExtras()!=null){
-            requestUrl = getIntent().getExtras().getString("url", null);
-            Log.d(TAG, "request url: "+requestUrl);
+            String requestUrl = getIntent().getExtras().getString("url", null);
             loadWebView(requestUrl);
         }else {
             Log.d(TAG, "empty url from bundle");
@@ -43,27 +41,25 @@ public class WebViewActivity extends AppCompatActivity {
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
         webView.setWebViewClient(new WebViewClient(){
-
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
-                Log.d(TAG, "on page started: "+url);
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
                 Intent resultIntent = new Intent();
-                Log.d(TAG, "FINISH URL: "+url);
                 if(url.contains("#access_token=")){
                     Uri uri = Uri.parse(url);
                     String token = uri.getEncodedFragment();
                     accessToken = token.substring(token.lastIndexOf("=")+1);
-                    Log.d(TAG, "access token: "+accessToken);
                 }else {
                     Log.d(TAG, "not token in redirected url...");
+                    resultIntent.putExtra("error","no token found");
                 }
                 if(accessToken!=null){
+                    //delete cache and cookies
                     view.clearCache(true);
                     CookieSyncManager.createInstance(getApplicationContext());
                     CookieManager cookieManager = CookieManager.getInstance();
@@ -79,6 +75,6 @@ public class WebViewActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        //TODO: finish app
+        finishAffinity();
     }
 }

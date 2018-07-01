@@ -2,7 +2,6 @@ package ie.droidfactory.instagramdemo;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.support.annotation.Nullable;
@@ -10,7 +9,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -34,21 +32,14 @@ import okhttp3.OkHttpClient;
 
 /**
  * Display user stats and recent activity...
- * TODO: design good control on access token
- * TODO: add logout button (in menu) with delete token and redirect to main activity
- * TODO: override onBackPressed - close entire app
- * TODO: check this tutorial: https://www.youtube.com/watch?v=w4LwBaUfYMw
  */
 public class UserStatsActivity extends AppCompatActivity implements MediaAdapter.MediaAdapterOnClickHandle{
 
     private static final String TAG = UserStatsActivity.class.getSimpleName();
     public static final int TOKEN_REQUEST = 123;
     private String mToken;
-    private int spans = 2;
     private TextView tvName, tvPosts, tvFollows, tvFollowsBy;
     private ImageView imgProfile;
-    private Button btnLogout;
-    private RecyclerView mRecyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private MediaAdapter mediaAdapter;
     private Picasso picasso;
@@ -62,11 +53,12 @@ public class UserStatsActivity extends AppCompatActivity implements MediaAdapter
         tvFollows = findViewById(R.id.profile_text_follows_value);
         tvFollowsBy = findViewById(R.id.profile_text_followBy_value);
         imgProfile = findViewById(R.id.profile_imageView);
-        btnLogout = findViewById(R.id.profile_button_logout);
+        Button btnLogout = findViewById(R.id.profile_button_logout);
         swipeRefreshLayout = findViewById(R.id.profile_swipe_refresh_layout);
-        mRecyclerView = findViewById(R.id.user_media_recycleView);
+        RecyclerView mRecyclerView = findViewById(R.id.user_media_recycleView);
         picasso = getPicasso();
-        if(getResources().getConfiguration().orientation== Configuration.ORIENTATION_LANDSCAPE) spans = 3;
+        int spans; // spans number in grid layout (2 for portrait, 3 for landscape)
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) spans = 3;
         else spans = 2;
         mediaAdapter = new MediaAdapter(this, this, picasso, ScreenUtils.getProfileImageWidth(this, 0.9, spans));
         GridLayoutManager layoutManager = new GridLayoutManager(this, spans);
@@ -103,19 +95,18 @@ public class UserStatsActivity extends AppCompatActivity implements MediaAdapter
     }
 
     private void getUserStats(final String token, final boolean refresh){
-        Log.d(TAG, "RUN AGAIN!!!!!!");
         UserSelfViewModel authViewModel = ViewModelProviders.of(this).get(UserSelfViewModel.class);
-        authViewModel.loadUserSelf(token, refresh).observe(this, new Observer<UserSelf>() {
+        authViewModel.getUserSelf(token, refresh).observe(this, new Observer<UserSelf>() {
             @Override
             public void onChanged(@Nullable UserSelf userSelf) {
-                Log.d(TAG, "getUserStats onChanged................)");
                 if(userSelf!=null){
                     if(userSelf.getMeta().getCode()==200){
                         setUserSelfView(userSelf, picasso);
                         getMediaData(token, refresh);
                     }else {
-                        //TODO: handle this
+                        Log.d(TAG, "http response error code: "+String.valueOf(userSelf.getMeta().getCode()));
                         Log.d(TAG, userSelf.getMeta().getError_message());
+                        Toast.makeText(getApplicationContext(), userSelf.getMeta().getError_message(), Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -124,16 +115,14 @@ public class UserStatsActivity extends AppCompatActivity implements MediaAdapter
 
     private void getMediaData(String token, boolean refresh){
         MediaViewModel mediaViewModel = ViewModelProviders.of(this).get(MediaViewModel.class);
-        mediaViewModel.loadMediaRecent(token, refresh).observe(this, new Observer<MediaRecent>() {
+        mediaViewModel.getMediaRecent(token, refresh).observe(this, new Observer<MediaRecent>() {
             @Override
             public void onChanged(@Nullable MediaRecent mediaRecent) {
                 if(mediaRecent!=null){
-                    Log.d(TAG, "http response code: "+String.valueOf(mediaRecent.getMeta().getCode()));
                     if(mediaRecent.getMeta().getCode()==200){
-                        Log.d(TAG, "media size: "+String.valueOf(mediaRecent.getDataArray().length));
                         mediaAdapter.swapMediaArray(mediaRecent.getDataArray());
                     }else {
-                        //TODO: clear shared preferences and return to main activity
+                        Log.d(TAG, "http response error code: "+String.valueOf(mediaRecent.getMeta().getCode()));
                         Log.d(TAG, mediaRecent.getMeta().getError_message());
                         Toast.makeText(getApplicationContext(), mediaRecent.getMeta().getError_message(), Toast.LENGTH_LONG).show();
                     }
@@ -154,7 +143,7 @@ public class UserStatsActivity extends AppCompatActivity implements MediaAdapter
         tvFollows.setText(String.valueOf(userData.getData().getCounts().getFollows()));
         tvFollowsBy.setText(String.valueOf(userData.getData().getCounts().getFollowed_by()));
         int size = ScreenUtils.getProfileImageWidth(this, 0.25,1);
-        Log.d(TAG, "profile img resize to: "+size);
+        //profile image resize to 20% of screen width
         picasso.load(userData.getData().getProfile_picture())
                 .placeholder(R.drawable.ic_person_black_24dp)
                 .resize(size, size)
@@ -165,6 +154,10 @@ public class UserStatsActivity extends AppCompatActivity implements MediaAdapter
         return new Picasso.Builder(this)
                 .downloader(new OkHttp3Downloader(new OkHttpClient.Builder().build()))
                 .build();
+    }
 
+    @Override
+    public void onBackPressed() {
+        finishAffinity();
     }
 }

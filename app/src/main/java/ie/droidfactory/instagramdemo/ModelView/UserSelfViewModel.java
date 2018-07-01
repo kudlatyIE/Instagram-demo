@@ -3,6 +3,7 @@ package ie.droidfactory.instagramdemo.ModelView;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import ie.droidfactory.instagramdemo.model.UserSelf;
@@ -20,27 +21,26 @@ public class UserSelfViewModel extends ViewModel{
 
     private MutableLiveData<UserSelf> mutableLiveDataUserSelf;
 
-    public LiveData<UserSelf> loadUserSelf(String accessToken, boolean refreshData){
+    public LiveData<UserSelf> getUserSelf(String accessToken, boolean refreshData){
         if (null==mutableLiveDataUserSelf){
             mutableLiveDataUserSelf = new MutableLiveData<>();
-            getUserStats(accessToken);
-        }else if(refreshData) getUserStats(accessToken);
+            loadDataFromInstagram(accessToken);
+        }else if(refreshData) loadDataFromInstagram(accessToken);
         return mutableLiveDataUserSelf;
     }
 
-    private void getUserStats(String acessToken) {
+    private void loadDataFromInstagram(String acessToken) {
         ServiceInstagram service = ServiceFactory.createService(ServiceInstagram.class, ApiUtils.ENDPOINT_SELF);
         Call<UserSelf> call = service.getUserSelf(acessToken);
 
         call.enqueue(new Callback<UserSelf>() {
             @Override
-            public void onResponse(Call<UserSelf> call, Response<UserSelf> response) {
-                Log.d(TAG, "http response code: "+response.body().getMeta().getCode());
+            public void onResponse(@NonNull Call<UserSelf> call, @NonNull Response<UserSelf> response) {
                 mutableLiveDataUserSelf.setValue(response.body());
+                Log.d(TAG, "http response code: "+response.body().getMeta().getCode());
             }
-
             @Override
-            public void onFailure(Call<UserSelf> call, Throwable t) {
+            public void onFailure(@NonNull Call<UserSelf> call, Throwable t) {
                 t.printStackTrace();
             }
         });

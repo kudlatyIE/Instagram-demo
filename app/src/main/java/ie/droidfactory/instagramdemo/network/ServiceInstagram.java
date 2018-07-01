@@ -8,6 +8,9 @@ import retrofit2.http.Query;
 
 import static ie.droidfactory.instagramdemo.network.ApiUtils.*;
 
+/**
+ * endpoints of Instagram api
+ */
 public interface ServiceInstagram {
 
     @GET(URL_RECENT_MEDIA)
