@@ -15,6 +15,6 @@ public class ApiUtils {
 
     public static String getAuthUrl(String redirectUrl, String clientId){
         if(null==clientId) return null;
-        else return SEVICE_AUTH_ENDPOINT_START.concat(clientId).concat(REDIRECT.concat(redirectUrl).concat(RESPONSE_TYPE).concat(clientId));
+        else return SEVICE_AUTH_ENDPOINT_START.concat(clientId).concat(REDIRECT.concat(redirectUrl).concat(RESPONSE_TYPE));
     }
 }
