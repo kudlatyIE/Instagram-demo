@@ -5,21 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UserStatsActivity">
-
-    <android.support.constraint.Guideline
-        android:id="@+id/vertical_middle_left"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.3" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/vertical_middle_right"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.65" />
+    tools:context=".screen.UserStatsActivity">
 
     <TextView
         android:id="@+id/profile_text_app_title"
@@ -52,105 +38,6 @@
         app:layout_constraintTop_toBottomOf="@+id/profile_button_logout"
         app:srcCompat="@color/colorGreyLight" />
 
-    <ImageView
-        android:id="@+id/profile_imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/horizontal_margin"
-        android:layout_marginStart="@dimen/horizontal_margin"
-        android:layout_marginTop="@dimen/short_margin"
-        app:layout_constraintEnd_toStartOf="@+id/vertical_middle_left"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile_divider_1" />
-
-    <TextView
-        android:id="@+id/profile_text_nick_name"
-        style="@style/TextLargeTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/horizontal_margin"
-        android:layout_marginStart="@dimen/short_margin"
-        android:layout_marginTop="@dimen/short_margin"
-        android:text="@string/nick_name_placeholder"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/profile_imageView"
-        app:layout_constraintTop_toBottomOf="@+id/profile_divider_1" />
-
-    <TextView
-        android:id="@+id/profile_text_post_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="@style/ProfileTextValue"
-        android:layout_marginTop="@dimen/short_margin"
-        app:layout_constraintEnd_toEndOf="@+id/profile_text_post_label"
-        app:layout_constraintStart_toStartOf="@+id/profile_text_post_label"
-        app:layout_constraintTop_toBottomOf="@+id/profile_text_nick_name" />
-
-    <TextView
-        android:id="@+id/profile_text_post_label"
-        style="@style/ProfileTextLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/horizontal_margin"
-        android:layout_marginTop="@dimen/short_margin"
-        android:text="@string/posts_label"
-        app:layout_constraintStart_toEndOf="@+id/profile_imageView"
-        app:layout_constraintTop_toBottomOf="@+id/profile_text_post_value" />
-
-    <TextView
-        android:id="@+id/profile_text_follows_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="@style/ProfileTextValue"
-        app:layout_constraintEnd_toEndOf="@+id/profile_text_follows_label"
-        app:layout_constraintStart_toStartOf="@+id/profile_text_follows_label"
-        app:layout_constraintTop_toTopOf="@+id/profile_text_post_value" />
-
-    <TextView
-        android:id="@+id/profile_text_follows_label"
-        style="@style/ProfileTextLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/horizontal_margin"
-        android:layout_marginStart="@dimen/horizontal_margin"
-        android:layout_marginTop="@dimen/short_margin"
-        android:text="@string/follows_label"
-        app:layout_constraintEnd_toStartOf="@+id/profile_text_followBy_label"
-        app:layout_constraintStart_toEndOf="@+id/profile_text_post_label"
-        app:layout_constraintTop_toBottomOf="@+id/profile_text_follows_value" />
-
-    <TextView
-        android:id="@+id/profile_text_followBy_label"
-        style="@style/ProfileTextLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/horizontal_margin"
-        android:layout_marginTop="@dimen/short_margin"
-        android:text="@string/followed_by_label"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile_text_followBy_value" />
-
-    <TextView
-        android:id="@+id/profile_text_followBy_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="@style/ProfileTextValue"
-        app:layout_constraintEnd_toEndOf="@+id/profile_text_followBy_label"
-        app:layout_constraintStart_toStartOf="@+id/profile_text_followBy_label"
-        app:layout_constraintTop_toTopOf="@+id/profile_text_follows_value" />
-
-    <ImageView
-        android:id="@+id/profile_divider_2"
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:layout_marginEnd="@dimen/short_margin"
-        android:layout_marginStart="@dimen/short_margin"
-        android:layout_marginTop="@dimen/short_margin"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile_imageView"
-        app:srcCompat="@color/colorGreyLight" />
-
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/profile_swipe_refresh_layout"
         android:layout_width="match_parent"
@@ -159,7 +46,7 @@
         android:layout_marginEnd="@dimen/short_margin"
         android:layout_marginStart="@dimen/short_margin"
         android:layout_marginTop="@dimen/short_margin"
-        app:layout_constraintTop_toBottomOf="@+id/profile_divider_2"
+        app:layout_constraintTop_toBottomOf="@+id/profile_divider_1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

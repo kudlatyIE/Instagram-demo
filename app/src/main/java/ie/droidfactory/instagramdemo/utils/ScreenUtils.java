@@ -2,6 +2,7 @@ package ie.droidfactory.instagramdemo.utils;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.util.Log;
 
 public class ScreenUtils {
 

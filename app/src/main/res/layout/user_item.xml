@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/short_margin"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.constraint.Guideline
+        android:id="@+id/vertical_middle_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.30833334" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/vertical_middle_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.64444447" />
+
+    <ImageView
+        android:id="@+id/user_item_profile_imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/horizontal_margin"
+        android:layout_marginStart="@dimen/horizontal_margin"
+        android:layout_marginTop="@dimen/short_margin"
+        android:src="@mipmap/ic_launcher"
+        app:layout_constraintTop_toBottomOf="@+id/user_item_profile_divider"
+        app:layout_constraintEnd_toStartOf="@+id/vertical_middle_left"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/user_item_profile_text_nick_name"
+        style="@style/TextLargeTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/horizontal_margin"
+        android:layout_marginStart="@dimen/short_margin"
+        android:layout_marginTop="@dimen/short_margin"
+        android:text="@string/nick_name_placeholder"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/user_item_profile_imageView" />
+
+    <TextView
+        android:id="@+id/user_item_profile_text_post_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/ProfileTextValue"
+        android:layout_marginTop="@dimen/short_margin"
+        app:layout_constraintEnd_toEndOf="@+id/user_item_profile_text_post_label"
+        app:layout_constraintStart_toStartOf="@+id/user_item_profile_text_post_label"
+        app:layout_constraintTop_toBottomOf="@+id/user_item_profile_text_nick_name" />
+
+    <TextView
+        android:id="@+id/user_item_profile_text_post_label"
+        style="@style/ProfileTextLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/horizontal_margin"
+        android:layout_marginTop="@dimen/short_margin"
+        android:text="@string/posts_label"
+        app:layout_constraintStart_toEndOf="@+id/user_item_profile_imageView"
+        app:layout_constraintTop_toBottomOf="@+id/user_item_profile_text_post_value" />
+
+    <TextView
+        android:id="@+id/user_item_profile_text_follows_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/ProfileTextValue"
+        app:layout_constraintEnd_toEndOf="@+id/user_item_profile_text_follows_label"
+        app:layout_constraintStart_toStartOf="@+id/user_item_profile_text_follows_label"
+        app:layout_constraintTop_toTopOf="@+id/user_item_profile_text_post_value" />
+
+    <TextView
+        android:id="@+id/user_item_profile_text_follows_label"
+        style="@style/ProfileTextLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/horizontal_margin"
+        android:layout_marginStart="@dimen/horizontal_margin"
+        android:layout_marginTop="@dimen/short_margin"
+        android:text="@string/follows_label"
+        app:layout_constraintEnd_toStartOf="@+id/user_item_profile_text_followBy_label"
+        app:layout_constraintStart_toEndOf="@+id/user_item_profile_text_post_label"
+        app:layout_constraintTop_toBottomOf="@+id/user_item_profile_text_follows_value" />
+
+    <TextView
+        android:id="@+id/user_item_profile_text_followBy_label"
+        style="@style/ProfileTextLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/horizontal_margin"
+        android:layout_marginTop="@dimen/short_margin"
+        android:text="@string/followed_by_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/user_item_profile_text_followBy_value" />
+
+    <TextView
+        android:id="@+id/user_item_profile_text_followBy_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/ProfileTextValue"
+        app:layout_constraintEnd_toEndOf="@+id/user_item_profile_text_followBy_label"
+        app:layout_constraintStart_toStartOf="@+id/user_item_profile_text_followBy_label"
+        app:layout_constraintTop_toTopOf="@+id/user_item_profile_text_follows_value" />
+
+    <ImageView
+        android:id="@+id/user_item_profile_divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginEnd="@dimen/short_margin"
+        android:layout_marginStart="@dimen/short_margin"
+        android:layout_marginTop="@dimen/short_margin"
+        android:src="@mipmap/ic_launcher"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+
+        app:srcCompat="@color/colorGreyLight" />
+
+</android.support.constraint.ConstraintLayout>

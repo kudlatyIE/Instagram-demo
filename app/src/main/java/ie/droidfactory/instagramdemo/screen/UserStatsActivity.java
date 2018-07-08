@@ -1,9 +1,8 @@
-package ie.droidfactory.instagramdemo;
+package ie.droidfactory.instagramdemo.screen;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -13,55 +12,68 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
+import javax.inject.Inject;
+
+import ie.droidfactory.instagramdemo.InstagramApplication;
+import ie.droidfactory.instagramdemo.network.ServiceInstagram;
+import ie.droidfactory.instagramdemo.screen.adapter.MediaAdapter;
 import ie.droidfactory.instagramdemo.ModelView.MediaViewModel;
 import ie.droidfactory.instagramdemo.ModelView.UserSelfViewModel;
+import ie.droidfactory.instagramdemo.R;
 import ie.droidfactory.instagramdemo.model.MediaData;
 import ie.droidfactory.instagramdemo.model.MediaRecent;
 import ie.droidfactory.instagramdemo.model.UserSelf;
 import ie.droidfactory.instagramdemo.network.ApiUtils;
 import ie.droidfactory.instagramdemo.utils.MySharedPref;
 import ie.droidfactory.instagramdemo.utils.ScreenUtils;
-import okhttp3.OkHttpClient;
 
 /**
  * Display user stats and recent activity...
  */
-public class UserStatsActivity extends AppCompatActivity implements MediaAdapter.MediaAdapterOnClickHandle{
+public class UserStatsActivity extends AppCompatActivity implements MediaAdapter.MediaAdapterOnClickHandle {
 
     private static final String TAG = UserStatsActivity.class.getSimpleName();
     public static final int TOKEN_REQUEST = 123;
+    private int spans;
     private String mToken;
-    private TextView tvName, tvPosts, tvFollows, tvFollowsBy;
-    private ImageView imgProfile;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private MediaAdapter mediaAdapter;
-    private Picasso picasso;
+
+    @Inject
+    MediaAdapter mediaAdapter;
+    @Inject
+    ServiceInstagram service;
+
+    MediaViewModel mediaViewModel;
+    UserSelfViewModel userViewModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_stats_new);
-        tvName = findViewById(R.id.profile_text_nick_name);
-        tvPosts = findViewById(R.id.profile_text_post_value);
-        tvFollows = findViewById(R.id.profile_text_follows_value);
-        tvFollowsBy = findViewById(R.id.profile_text_followBy_value);
-        imgProfile = findViewById(R.id.profile_imageView);
         Button btnLogout = findViewById(R.id.profile_button_logout);
         swipeRefreshLayout = findViewById(R.id.profile_swipe_refresh_layout);
         RecyclerView mRecyclerView = findViewById(R.id.user_media_recycleView);
-        picasso = getPicasso();
-        int spans; // spans number in grid layout (2 for portrait, 3 for landscape)
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) spans = 3;
-        else spans = 2;
-        mediaAdapter = new MediaAdapter(this, this, picasso, ScreenUtils.getProfileImageWidth(this, 0.9, spans));
+        spans = getResources().getInteger(R.integer.span_number); // spans number in grid layout (controlled by config.xml)
+        Log.d(TAG, "spans number: "+spans);
+
+        UserStatsActivityComponent component = DaggerUserStatsActivityComponent.builder()
+                .userStatsActivityModule(new UserStatsActivityModule(this))
+                .instagramApplicationComponent(InstagramApplication.get(this).component())
+                .build();
+        component.injectUserStatsActivity(this);
+
         GridLayoutManager layoutManager = new GridLayoutManager(this, spans);
+        layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                return position == 0 ? spans : 1;
+            }
+        });
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mediaAdapter);
 
@@ -95,13 +107,13 @@ public class UserStatsActivity extends AppCompatActivity implements MediaAdapter
     }
 
     private void getUserStats(final String token, final boolean refresh){
-        UserSelfViewModel authViewModel = ViewModelProviders.of(this).get(UserSelfViewModel.class);
-        authViewModel.getUserSelf(token, refresh).observe(this, new Observer<UserSelf>() {
+        userViewModel = ViewModelProviders.of(this).get(UserSelfViewModel.class);
+        userViewModel.getUserSelf(service, token, refresh).observe(this, new Observer<UserSelf>() {
             @Override
             public void onChanged(@Nullable UserSelf userSelf) {
                 if(userSelf!=null){
                     if(userSelf.getMeta().getCode()==200){
-                        setUserSelfView(userSelf, picasso);
+                        mediaAdapter.swapUserData(userSelf.getData(), ScreenUtils.getProfileImageWidth(getApplicationContext(), 0.25,1));
                         getMediaData(token, refresh);
                     }else {
                         Log.d(TAG, "http response error code: "+String.valueOf(userSelf.getMeta().getCode()));
@@ -114,13 +126,13 @@ public class UserStatsActivity extends AppCompatActivity implements MediaAdapter
     }
 
     private void getMediaData(String token, boolean refresh){
-        MediaViewModel mediaViewModel = ViewModelProviders.of(this).get(MediaViewModel.class);
-        mediaViewModel.getMediaRecent(token, refresh).observe(this, new Observer<MediaRecent>() {
+        mediaViewModel = ViewModelProviders.of(this).get(MediaViewModel.class);
+        mediaViewModel.getMediaRecent(service, token, refresh).observe(this, new Observer<MediaRecent>() {
             @Override
             public void onChanged(@Nullable MediaRecent mediaRecent) {
                 if(mediaRecent!=null){
                     if(mediaRecent.getMeta().getCode()==200){
-                        mediaAdapter.swapMediaArray(mediaRecent.getDataArray());
+                        mediaAdapter.swapMediaArray(mediaRecent.getDataArray(), ScreenUtils.getProfileImageWidth(getApplicationContext(), 0.9, spans));
                     }else {
                         Log.d(TAG, "http response error code: "+String.valueOf(mediaRecent.getMeta().getCode()));
                         Log.d(TAG, mediaRecent.getMeta().getError_message());
@@ -137,27 +149,9 @@ public class UserStatsActivity extends AppCompatActivity implements MediaAdapter
         Toast.makeText(this, "img title:\n"+mediaData.getCaption().getText(), Toast.LENGTH_SHORT).show();
     }
 
-    private void setUserSelfView(UserSelf userData, Picasso picasso){
-        tvName.setText(userData.getData().getUsername());
-        tvPosts.setText(String.valueOf(userData.getData().getCounts().getMedia()));
-        tvFollows.setText(String.valueOf(userData.getData().getCounts().getFollows()));
-        tvFollowsBy.setText(String.valueOf(userData.getData().getCounts().getFollowed_by()));
-        int size = ScreenUtils.getProfileImageWidth(this, 0.25,1);
-        //profile image resize to 20% of screen width
-        picasso.load(userData.getData().getProfile_picture())
-                .placeholder(R.drawable.ic_person_black_24dp)
-                .resize(size, size)
-                .into(imgProfile);
-    }
-
-    private Picasso getPicasso(){
-        return new Picasso.Builder(this)
-                .downloader(new OkHttp3Downloader(new OkHttpClient.Builder().build()))
-                .build();
-    }
-
     @Override
     public void onBackPressed() {
         finishAffinity();
     }
+
 }

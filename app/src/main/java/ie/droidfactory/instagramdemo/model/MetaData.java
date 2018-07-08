@@ -1,5 +1,8 @@
 package ie.droidfactory.instagramdemo.model;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * http response json object contains:
  * code: int (http response code),
@@ -7,8 +10,17 @@ package ie.droidfactory.instagramdemo.model;
  * error_message: String
  */
 public class MetaData {
+
+    @SerializedName("code")
+    @Expose
     private int code;
+
+    @SerializedName("error_type")
+    @Expose
     private String error_type;
+
+    @SerializedName("error_message")
+    @Expose
     private String error_message;
 
     public int getCode() {

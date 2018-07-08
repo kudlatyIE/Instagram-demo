@@ -6,6 +6,9 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ * not used anymore, retrofit service is provided by ServiceInstagramModule class
+ */
 public class ServiceFactory {
 
     private static OkHttpClient.Builder okHttpClient = new OkHttpClient.Builder();

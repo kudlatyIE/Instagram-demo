@@ -1,11 +1,19 @@
 package ie.droidfactory.instagramdemo.model;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * user/self pojo model
  */
 public class UserSelf {
 
+    @SerializedName("data")
+    @Expose
     private UserData data;
+
+    @SerializedName("meta")
+    @Expose
     private MetaData meta;
 
     public MetaData getMeta() {
