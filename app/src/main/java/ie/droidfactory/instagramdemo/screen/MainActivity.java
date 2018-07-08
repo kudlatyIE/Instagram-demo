@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         if(MySharedPref.getAccessToken(this)==null){
             //redirect to web login page if user has no access token, after logout also
             Intent intent = new Intent(getApplicationContext(), WebViewActivity.class);
-            intent.putExtra("url", ApiUtils.getAuthUrl(getResources().getString(R.string.insta_client_id)));
+            intent.putExtra("url", ApiUtils.getAuthUrl(getString(R.string.redirect_url),getResources().getString(R.string.insta_client_id)));
             startActivityForResult(intent, TOKEN_REQUEST);
         }else {
             //Go to user stats activity
