@@ -12,6 +12,7 @@ import ie.droidfactory.instagramdemo.model.UserSelf;
 import ie.droidfactory.instagramdemo.network.ApiUtils;
 import ie.droidfactory.instagramdemo.network.ServiceFactory;
 import ie.droidfactory.instagramdemo.network.ServiceInstagram;
+import ie.droidfactory.instagramdemo.utils.MySharedPref;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -36,8 +37,11 @@ public class UserSelfViewModel extends ViewModel{
         call.enqueue(new Callback<UserSelf>() {
             @Override
             public void onResponse(@NonNull Call<UserSelf> call, @NonNull Response<UserSelf> response) {
-                mutableLiveDataUserSelf.setValue(response.body());
-                Log.d(TAG, "http response code: "+response.body().getMeta().getCode());
+                if(response.body()!=null){
+                    mutableLiveDataUserSelf.setValue(response.body());
+                    Log.d(TAG, "http response code: "+response.body().getMeta().getCode());
+                }
+
             }
             @Override
             public void onFailure(@NonNull Call<UserSelf> call, Throwable t) {
