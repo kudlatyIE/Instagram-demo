@@ -92,7 +92,7 @@ public class UserStatsActivity extends AppCompatActivity implements MediaAdapter
             public void onClick(View view) {
                 MySharedPref.setAccessToken(getApplicationContext(), null);
                 Intent intent = new Intent(getApplicationContext(), WebViewActivity.class);
-                intent.putExtra("url", ApiUtils.getAuthUrl(getString(R.string.redirect_url),getResources().getString(R.string.insta_client_id)));
+                intent.putExtra("url", ApiUtils.getAuthUrl(getResources().getString(R.string.insta_client_id)));
                 startActivityForResult(intent, TOKEN_REQUEST);
                 finish();
             }
