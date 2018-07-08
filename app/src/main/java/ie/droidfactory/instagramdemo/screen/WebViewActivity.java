@@ -1,4 +1,4 @@
-package ie.droidfactory.instagramdemo;
+package ie.droidfactory.instagramdemo.screen;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -13,9 +13,11 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import ie.droidfactory.instagramdemo.R;
+
 /**
- * Instagram implicit flow
- * Receiving an access_token http://your-redirect-uri#access_token=ACCESS-TOKEN
+ * Instagram implicit flow:
+ * Receiving the access_token from url http://your-redirect-uri#access_token=ACCESS-TOKEN
  */
 public class WebViewActivity extends AppCompatActivity {
 

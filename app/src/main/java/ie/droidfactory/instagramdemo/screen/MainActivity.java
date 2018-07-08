@@ -1,15 +1,12 @@
-package ie.droidfactory.instagramdemo;
+package ie.droidfactory.instagramdemo.screen;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
+import ie.droidfactory.instagramdemo.R;
 import ie.droidfactory.instagramdemo.network.ApiUtils;
 import ie.droidfactory.instagramdemo.utils.MySharedPref;
 

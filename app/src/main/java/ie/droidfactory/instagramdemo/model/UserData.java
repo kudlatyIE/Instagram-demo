@@ -1,14 +1,41 @@
 package ie.droidfactory.instagramdemo.model;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 public class UserData {
 
+
+    @SerializedName("id")
+    @Expose
     private String id;
+
+    @SerializedName("username")
+    @Expose
     private String username;
+
+    @SerializedName("full_name")
+    @Expose
     private String full_name;
+
+    @SerializedName("profile_picture")
+    @Expose
     private String profile_picture;
+
+    @SerializedName("bio")
+    @Expose
     private String bio;
+
+    @SerializedName("website")
+    @Expose
     private String website;
+
+    @SerializedName("is_business")
+    @Expose
     private boolean is_business;
+
+    @SerializedName("counts")
+    @Expose
     private Counts counts;
 
     public String getId() {

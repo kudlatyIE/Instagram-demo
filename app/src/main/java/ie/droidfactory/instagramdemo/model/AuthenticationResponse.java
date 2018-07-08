@@ -8,6 +8,7 @@ public class AuthenticationResponse {
     @SerializedName("access_token")
     @Expose
     private String access_token;
+
     @SerializedName("user")
     @Expose
     private User user;

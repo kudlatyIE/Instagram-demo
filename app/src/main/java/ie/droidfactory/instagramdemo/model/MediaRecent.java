@@ -1,11 +1,19 @@
 package ie.droidfactory.instagramdemo.model;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * media/recent instagram response
  */
 public class MediaRecent { // json array "data"
 
+    @SerializedName("meta")
+    @Expose
     private MetaData meta; //http response
+
+    @SerializedName("data")
+    @Expose
     private MediaData[] data;
 
     public MetaData getMeta() {
